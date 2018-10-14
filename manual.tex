@@ -1,7 +1,7 @@
 \documentclass[a4paper]{article}
 %% Packages
-\usepackage[hidelinks]{hyperref}
-\usepackage{graphicx}
+\usepackage[dvipdfmx, hidelinks]{hyperref}
+\usepackage[dvipdfmx]{graphicx}
 \usepackage{epstopdf}
 
 \usepackage{tcolorbox}
@@ -65,8 +65,17 @@ This manual assumes the simulator and agents will run in a Linux machine even th
 %%
 \subsection{Installing RoboCup Rescue Simulation (RCRS) Server}
 \begin{enumerate}
- \item Clone the simulation server from \url{https://github.com/roborescue/rcrs-server}.
- \item Compile the simulator using the commands \texttt{gradle clean} and \texttt{gradle completeBuild}.
+ \item Clone the simulation server from
+       \url{https://github.com/roborescue/rcrs-server}.
+ \item Change to the directory ``rcrs-server''.
+       \begin{enumerate}
+	\item If you use macOS, patch the file ``boot/functions.sh''
+	      like\\
+
+	      ``\verb|sed -i -e "/readlink/s/^/#/" boot/functions.sh|''.
+       \end{enumerate}
+ \item Compile the simulator using the commands \texttt{gradle clean}
+       and \texttt{gradle completeBuild}.       
  \item Check the message at the end of the installation.
        If the installation is successfully completed, you get the message ``BUILD SUCCESSFUL''; otherwise you get ``BUILD FAILED''.
 \end{enumerate}
@@ -77,7 +86,8 @@ If you are using Ubuntu, the installation proceeds according to the commands bel
   \begin{tcolorbox}[title=Installation on Ubuntu, width=.98\linewidth]
   {\ttfamily\small
   \$ git clone https://github.com/roborescue/rcrs-server.git\\
-  \$ cd rcrs-server\\
+   \$ cd rcrs-server\\
+   (\$ sed -i -e \verb|"/readlink/s/^/#/"| boot/functions.sh \# Only required for macOS)\\
   \$ gradle clean\\
   \$ gradle completeBuild
   }
@@ -107,7 +117,8 @@ If you are using Ubuntu, you can get and compile the ADF with the following comm
   {\ttfamily\small
   \$ git clone https://github.com/roborescue/rcrs-adf-sample.git\\
   \$ cd rcrs-adf-sample\\
-  \$ ./compile.sh
+   \$ ./compile.sh
+   % Old \$ java -jar ./library/rescue/adf/adf-core.jar -compile\\
   }
   \end{tcolorbox}
 \end{center}
