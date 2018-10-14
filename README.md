@@ -1,2 +1,1 @@
-# rcrs-docs
-RoboCup Rescue Simulator Documentation
+# `rcrs-docs` RoboCup Rescue Simulator Documentation
