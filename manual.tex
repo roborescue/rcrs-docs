@@ -1,13 +1,17 @@
-\documentclass[a4paper]{article}
+\documentclass{article}
 %% Packages
+\usepackage[a4paper,top=2cm,left=2.5cm, right=2.5cm,bottom=3cm,footskip=0.75cm]{geometry}
+\usepackage[utf8]{inputenc}
 \usepackage[hidelinks]{hyperref}
 \usepackage{graphicx}
 \usepackage{epstopdf}
+\usepackage{subcaption}
+\usepackage[authoryear,round]{natbib}
 
 \usepackage{tcolorbox}
 \usepackage{listings}
-\lstset{%
-  language={Java},%
+\lstset{
+  language={Java},
   basicstyle = \scriptsize\ttfamily,
   breaklines = true,
   breakindent = 40pt,
@@ -24,7 +28,7 @@
   identifierstyle = \itshape\scriptsize,
   commentstyle = \fontfamily{ptm}\selectfont\scriptsize\color{red},
   stringstyle = \scshape\scriptsize,
-  tabsize = 2,
+  tabsize = 2
 }
 
 \oddsidemargin -5.4mm
@@ -39,16 +43,29 @@
 \begin{document}
 %%
 \title{RoboCup Rescue Simulator and Agent Development Framework Manual}
-\date{October 14, 2018}
+\author{}
+\date{October 15, 2018}
 %%
 \maketitle
 %%
 \tableofcontents
 %%
 \section{Introduction}
+A \emph{disaster} may be defined as a crisis situation causing widespread human, material, economical and environmental damages that surpasses the system's capacity to recover. There are two main ways of treating a disaster:
+
+\begin{enumerate}
+  \item Preventing it from happening, which can be done through identifying its causes and preventing them from taking place.
+  \item Managing its impacts once they happen through the application of previously established governmental policies and strategies.
+\end{enumerate}
+
+The former option is usually more desirable, since it is very effective and very little disrupting. However, this is not always possible, since some events are too intense to be avoided even if forecasted with great antecedence, and others are unpredictable. Thus, the management option becomes necessary for the mitigation of the disaster's impacts.
+
+After the 1995 Kobe earthquake events, Japanese researchers came up with the idea of developing a simulator that reproduces conditions similar to a urban post-earthquake in order to test mitigation strategies for this kind of disaster. They also organized a competition, the RoboCup Rescue Agent Simulation League, in which people from all over the world would be able to demonstrate their advancements in the coordination of rescuing agents teams running in this simulator and to help in the development of policies and strategies to mitigate the impact of such disasters.
+
 The purpose of this manual is to facilitate the understanding of the first contact with the RoboCup Rescue Simulation server and to help people interested in participating in RoboCup Rescue Agent Simulation competitions.
 %%
 \section{Installation}
+%%
 This manual assumes the simulator and agents will run in a Linux machine even though it is possible to run them in Microsoft Windows or Apple macOS. We recommend to use Linux because it is open-source and most of the distributions have a good support from the users' community. If you have never used Linux before and intend to, we recommend starting with a user-friendly distribution, such as Ubuntu\footnote{\url{https://www.ubuntu.com/}} or Fedora\footnote{\url{https://getfedora.org}}.
 %%
 \subsection{Software Requirements}
@@ -68,7 +85,7 @@ This manual assumes the simulator and agents will run in a Linux machine even th
  \item Clone the simulation server from \url{https://github.com/roborescue/rcrs-server}.
  \item Compile the simulator using the commands \texttt{gradle clean} and \texttt{gradle completeBuild}.
  \item Check the message at the end of the installation.
-       If the installation is successfully completed, you get the message ``BUILD SUCCESSFUL''; otherwise you get ``BUILD FAILED''.
+       If the installation is successfully completed, you get the message \texttt{BUILD SUCCESSFUL}; otherwise you get \texttt{BUILD FAILED}.
 \end{enumerate}
 
 If you are using Ubuntu, the installation proceeds according to the commands below:
@@ -112,6 +129,7 @@ If you are using Ubuntu, you can get and compile the ADF with the following comm
   \end{tcolorbox}
 \end{center}
 %%
+%%
 \section{Running the ADF Sample Agents on RCRS Server}
 %%
 \subsection{Running without Precomputation}
@@ -134,7 +152,7 @@ Use one terminal window and move to the boot directory inside the simulator's fo
 
 When the simulation server runs correctly, the window in Fig. \ref{fig:simulator01} will appear.
 
-\begin{figure}[h]
+\begin{figure}[ht]
  \begin{center}
   \includegraphics[width=.9\linewidth]{figs/simulator01.eps}
   \caption{Running the Simulation Server}
@@ -158,7 +176,7 @@ After running the simulation server, move to \texttt{rcrs-adf-sample} directory 
 
 If the agents can connect with the simulator, the state of the agents and a city are shown on the left-hand side in the window shown in Fig. \ref{fig:simulator01}. Then, the simulation is started as shown in Fig. \ref{fig:simulator02}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
  \begin{center}
   \includegraphics[width=1.0\linewidth]{figs/simulator02.eps}
   \caption{Starting the Simulation}
@@ -239,17 +257,17 @@ After running the simulation server, move to the ADF directory on the other term
 \subsection{Directories}
 Important directories of the simulation server are:
 \begin{itemize}
- \item boot/: scripts to run the simulation server
+ \item \texttt{boot/}: scripts to run the simulation server
        \begin{itemize}
-	 \item boot/config/: configuration files of the simulation server.
-	\item boot/logs/: log files.
+         \item \texttt{boot/config/}: configuration files of the simulation server.
+         \item \texttt{boot/logs/}: log files.
        \end{itemize}
- \item build/: the simulation server's Java classes.
- \item jars/: the simulation server's JAR files.
- \item lib/: libraries used by the simulation server.
- \item maps/: maps that can be ran in the simulation server.
- \item modules/: the simulation server's source code.
- \item oldsims/: source code of some of the simulation server's older versions.
+ \item \texttt{build/}: the simulation server's Java classes.
+ \item \texttt{jars/}: the simulation server's JAR files.
+ \item \texttt{lib/}: libraries used by the simulation server.
+ \item \texttt{maps/}: maps that can be ran in the simulation server.
+ \item \texttt{modules/}: the simulation server's source code.
+ \item \texttt{oldsims/}: source code of some of the simulation server's older versions.
 \end{itemize}
 %%
 %%
@@ -258,9 +276,9 @@ Important directories of the simulation server are:
 The following parameters can be used to run the simulation server:
 %%
 \begin{itemize}
- \item -m MAPDIR or {-}{-}map MAPDIR, where MAPDIR is the path to the directory containing the map you want to run (default is ../maps/gml/Kobe2013/map).
- \item -c CONFIGDIR or {-}{-}config CONFIGDIR, where CONFIGDIR is the directory containing the configuration associated with a map (default is ./config).
- \item -l LOGDIR or {-}{-}log LOGDIR, where LOGDIR is the directory where the log files will be stored (default is ./logs).
+  \item -m MAPDIR or {-}{-}map MAPDIR, where MAPDIR is the path to the directory containing the map you want to run (default is ../maps/gml/Kobe2013/map).
+  \item -c CONFIGDIR or {-}{-}config CONFIGDIR, where CONFIGDIR is the directory containing the configuration associated with a map (default is ./config).
+  \item -l LOGDIR or {-}{-}log LOGDIR, where LOGDIR is the directory where the log files will be stored (default is ./logs).
 \end{itemize}
 %%
 
@@ -288,20 +306,12 @@ This section explain how to implement your agents using ADF samples.
 Important directories of ADF (\texttt{rcrs-adf-sample}) are:
 %%
 \begin{itemize}
- \item config/: configuration file of agents.
- \item src/: agents' source codes.
- \item precomp\_data/: results of a precomputation for each type of agents.
- \item build/: agents' Java classes.
- \item library/: libraries used by agents.
+ \item \texttt{config/}: configuration file of agents.
+ \item \texttt{src/}: agents' source codes.
+ \item \texttt{precomp\_data/}: results of a precomputation for each type of agents.
+ \item \texttt{build/}: agents' Java classes.
+ \item \texttt{library/}: libraries used by agents.
 \end{itemize}
-
-% \begin{figure}[h]
-%  \begin{center}
-%   \includegraphics[width=.8\linewidth]{figs/adfv2_2-package.eps}
-%   \caption{Structure of ``src'' directory}
-%   \label{fig:src}
-%  \end{center}
-% \end{figure}
 %%
 %%
 \subsection{Files to Create Your Agents}
@@ -346,7 +356,7 @@ The modules configuration file \texttt{src/adf/config/module.cfg} indicates whic
 \texttt{adf.sample.module.complex.SampleSearch}. An usage example is shown in Section~\ref{subsubsec:module.cfg}.
 
 
-\begin{figure}[h]
+\begin{figure}[ht]
  \begin{center}
   \begin{screen}
    {\ttfamily\small
@@ -717,7 +727,7 @@ private class Node {
 %%
 You must edit the module configuration file \texttt{src/adf/config/module.cfg} related to a path planning to use your code. The Figs.~\ref{fig:default_module.cfg} and~\ref{fig:edited_module.cfg} show the part of the default module.cfg and the part of the edited module.cfg where the lines related to a path planning are changed. In this case, all \texttt{adf.sample.module.algorithm.SamplePathPlanning} in the file are replaced with \texttt{myteam.module.algorithm.AStarPathPlanning}. If you would like to use the code in some modules, you can indicate that the only modules refer to it.
 %%
-\begin{figure}[h]
+\begin{figure}[ht]
  \begin{center}
   \begin{screen}
    {\ttfamily
@@ -741,7 +751,7 @@ CommandExecutorScoutPolice.PathPlanning : adf.sample.module.algorithm.SamplePath
  \end{center}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[ht]
  \begin{center}
 \begin{screen}
 {\ttfamily
@@ -764,5 +774,263 @@ CommandExecutorScoutPolice.PathPlanning : myteam.module.algorithm.AStarPathPlann
   \label{fig:edited_module.cfg}
  \end{center}
 \end{figure}
+%%
+%%
+\section{RoboCup Rescue Simulation Server}
+%%
+\subsection{Architecture}
+%%
+The simulator is in fact divided into many other simulators:
+%%
+\begin{itemize}
+  \item the \texttt{clear} simulator, responsible for blockade removal;
+  \item the \texttt{collapse} simulator, responsible for managing buildings' structural damage and blockade creation;
+  \item the \texttt{ignition} simulator, responsible for firing up random buildings during the simulation;
+  \item the \texttt{fire} simulator, responsible for the fire spread between buildings;
+  \item the \texttt{traffic} simulator, responsible for humans' movement;
+  \item the \texttt{misc} simulator, responsible for human damage and buriedness.
+\end{itemize}
+%%
 
+These simulators establish connections to the \emph{kernel simulator}, responsible for coordinating the simulators' processes and centralizing the data they generate.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figs/simulator_architecture}
+  \caption{RoboCup Rescue Agent Simulation platform architecture~\cite{skinnerRamchurn2010}}
+  \label{fig:simulator_architecture}
+\end{figure}
+
+The RoboCup Rescue simulator was designed to create a \emph{partially observable}, \emph{discrete-time}, \emph{dynamic}, \emph{stochastic}, \emph{multiagent} environment. In other words, in this environment:
+
+\begin{itemize}
+  \item the complete world current state cannot be known through a single agent's perception (even if the agent has an infinite range of sight, it still will not be able to see through a building's walls);
+  \item time is divided in intervals, as opposed to continuous time;
+  \item there are random elements that affect its state transition;
+  \item there is more than one agent present, and one's actions may interfere with the others' performance.
+\end{itemize}
+
+Time is divided in \emph{time-steps}; during each time-step, the agent perceives the environment and reasons about what action it will perform. In each time-step, the following happens:
+%%
+\begin{enumerate}
+\label{enum:time-step}
+  \item The kernel updates all agents' perception (visual and communication) and waits for the agents' commands.
+  \item The agents updates their world model and make their decisions, sending their commands to the kernel.
+  \item The kernel sends the agents' commands to the simulators.
+  \item The simulators process the agents' commands and send the changes suffered by the environment back to the kernel.
+  \item The kernel sends the environment changes to the viewers.
+\end{enumerate}
+%%
+%%
+\subsection{Entities}
+%%
+Several objects are represented in the simulator as depicted in Figure~\ref{fig:entities}.
+%%
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1.0\textwidth]{figs/entities}
+  \caption{Entities of the simulator}
+  \label{fig:entities}
+\end{figure}
+%%
+%%
+\subsubsection{Blockades}
+%%
+Blockades obstruct the path of agents and civilians; they are represented as black polygons in roads. Blockades appear in the beginning of the simulation and are not produced after this. They must be removed by Police Forces.
+
+\paragraph{Properties}
+%%
+\begin{itemize}
+  \item \texttt{position}: ID of the road to which the blockade belongs
+  \item \texttt{repair cost}: cost to completely remove the blockade from the road
+  \item \texttt{shape}: a rectangle which surrounds the whole blockade
+  \item \texttt{X} \& \texttt{Y}: coordinates of the blockade's centroid
+  \item \texttt{apexes}: vector containing the apexes of the blockade
+\end{itemize}
+%%
+%%
+\subsubsection{Area}
+%%
+Area entities represent buildings and roads.
+
+\paragraph{Properties}
+%%
+\begin{itemize}
+  \item \texttt{blockades}: a list with the blockades in that area
+  \item \texttt{edges}: a list with the edges that limit the area
+  \item \texttt{neighbours}: a list of the areas that can be accessed from this area
+  \item \texttt{X} \& \texttt{Y}: coordinates representing the area in the map
+\end{itemize}
+%%
+
+While both buildings and roads have the \emph{blockades} attribute, blockades appear only in roads.
+%%
+\subsubsection{Buildings}
+
+Buildings group all kinds of buildings in the simulator: besides the regular ones, described below, there are special kinds of buildings (\emph{refuges}, \emph{ambulance centres}, \emph{fire stations} and \emph{police offices}, shown in Figure~\ref{fig:special_buildings}) which cannot catch on fire. They will be described in later sections of this document.
+%%
+\begin{figure}[htp]
+  \centering
+  \begin{subfigure}[hb]{0.45\textwidth}
+    \centering
+    \includegraphics[scale=0.6]{figs/refuge}
+    \caption{Refuge}
+    \label{fig:refuge}
+  \end{subfigure}
+  \begin{subfigure}[hb]{0.45\textwidth}
+    \centering
+    \includegraphics[scale=0.6]{figs/ambulance_central}
+    \caption{Ambulance Central}
+    \label{fig:ambulance_central}
+  \end{subfigure}
+
+  \begin{subfigure}[hb]{0.45\textwidth}
+    \centering
+    \includegraphics[scale=0.6]{figs/fire_station}
+    \caption{Fire Station}
+    \label{fig:fire_station}
+  \end{subfigure}
+  \begin{subfigure}[hb]{0.45\textwidth}
+    \centering
+    \includegraphics[scale=0.6]{figs/police_office}
+    \caption{Police Office}
+    \label{fig:police_office}
+  \end{subfigure}
+
+  \caption{Special buildings}
+  \label{fig:special_buildings}
+\end{figure}
+%%
+
+\paragraph{Properties}
+%%
+\begin{itemize}
+  \item \texttt{brokenness}: how structurally damaged the building is; does not change during the simulation
+  \item \texttt{fieryness}: the intensity of the fire and fire-related damage in the building
+  \begin{itemize}
+    \item \texttt{UNBURNT} (not burnt at all)
+    \item \texttt{WATER\_DAMAGE} (not burnt at all, but has water damage)
+    \item \texttt{HEATING} (on fire a bit)
+    \item \texttt{BURNING} (on fire a bit more)
+    \item \texttt{INFERNO} (on fire a lot)
+    \item \texttt{MINOR\_DAMAGE} (extinguished but minor damage)
+    \item \texttt{MODERATE\_DAMAGE} (extinguished but moderate damage)
+    \item \texttt{SEVERE\_DAMAGE} (extinguished but major damage)
+    \item \texttt{BURNT\_OUT} (completely burnt out)
+  \end{itemize}
+  \item \texttt{floors}: the number of floors the building has
+  \item \texttt{ground area}: the area of each floor
+  \item \texttt{ignition}: indicates if the simulator has lit this building on fire\footnote{A building can catch on fire by being ignited by the simulator or by being close to a burning building; ignition will be set to "1" if the building was, at some point of the simulation, ignited by the simulator}
+  \item \texttt{importance}: (unknown function; has equal values to all buildings)
+  \item \texttt{temperature}: temperature of the building; if it crosses a certain threshold, the building catches on fire
+  \item \texttt{total area}: the total area of the building (\texttt{floors X ground area})
+\end{itemize}
+%%
+
+Regular buildings are represented as polygons of various colors, depending of their status, as shown in Figure~\ref{fig:building_status}; the darker the color, the greater the structural fire or water damage.
+%%
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1.0\textwidth]{figs/building_status}
+  \caption{Possible status of regular buildings}
+  \label{fig:building_status}
+\end{figure}
+%%
+
+In the beginning of the simulation, broken buildings trap humans inside it under debris; these debris must be removed by Ambulance Teams, who then proceeds to rescue the human.
+
+A \emph{refuge} is a special kind of building: it represents a place destined to support the rescue activity, providing medical care for the wounded and water to the Fire Brigades. In the simulator, humans inside a refuge have their damage zeroed, which means they do not lose health while they stay there; damage will, however, resume when the human entity leaves the refuge.
+
+Also, Fire Brigades have their water supply replenished by a certain amount during each cycle while they are inside the refuge.
+%%
+\subsubsection{Roads}
+%%
+Area entities representing roads have no new attributes besides those of \emph{area} entities.
+%%
+\subsubsection{Humans}
+%%
+These are the entities representing humans. In the simulator, they can be \emph{Civilians}, \emph{Ambulance Teams}, \emph{Fire Brigades} or \emph{Police Forces}. They are all represented by circles of different colors, and cannot move by themselves if they are dead or buried.
+%%
+\begin{itemize}
+  \item \texttt{buriedness}: how deep the human is buried
+  \item \texttt{damage}: how much HP the human loses per cycle; zeroes when a refuge is reached
+  \item \texttt{direction}: direction to where the human is moving (inferred); the Y-axis positive half is zero, and the value increases until   129599 (360*60*60 - 1) seconds anti-clockwise
+  \item \texttt{HP}: health points of the human; if it reaches 0, the human dies
+  \item \texttt{position}: ID of the entity where the human is; may be an area entity or a human entity (if it is inside an ambulance)
+  \item \texttt{position history}: a list of the entities the human has passed during the last cycle, in chronological order
+  \item \texttt{stamina}: not implemented; would decrease each time the agent took an action and would be partially replenished at the beginning of each cycle
+  \item \texttt{travel distance}: (unknown)
+  \item \texttt{X} \& \texttt{Y}: coordinates representing the human in the map
+\end{itemize}
+%%
+
+The color of each human in the simulator is defined by its type and its health: the lower its health, the darker it is. Dead humans are represented by the black color.
+%%
+\subsubsection{Civilians}
+
+Civilians are human entities and they are not part of a rescue team; they are represented by the color green. Their standard behavior is to walk to the closest refuge on their on if they are not wounded or buried; otherwise, they will have to be transported by an Ambulance Team.
+%%
+\subsection{Agents}
+
+These are the entities that will compose your rescue team; in other words, this is what you will program. Agents are divided in two types: \emph{platoon agents} and \emph{central agents}.
+
+\subsubsection{Platoon agents}
+
+\emph{Platoon agents} are able to interact with the simulated environment through perception and executing actions on it. They can also exchange messages with other agents by vocal or radio communication. They are comprised of three different categories: the \emph{Ambulance Team}, \emph{Fire Brigade} and \emph{Police Force}.
+
+\paragraph{Ambulance Team}
+
+\emph{Ambulance Teams} are responsible for rescuing humans (agents and civilians) and take them to a refuge. They are able to unbury victims and carry one person.
+
+\paragraph{Fire Brigade}
+
+\emph{Fire brigades} are responsible for extinguish fires on buildings. Moreover, they carry a certain amount of water in their tanks and they can replenish it in a refuge.
+
+\paragraph{Police Force}
+
+\emph{Police forces} are responsible for removing blockades from the roads. When ordered to do so, they will clean a certain amount, specified in the repair cost parameter, from the target blockade at each cycle. However, differently from Ambulance Teams and Fire Brigades, having two Police Forces acting on the same blockade brings no advantage to the process: it will be as though there was only one Police Force acting on it.
+%%
+\subsubsection{Central agents}
+%%
+\emph{Central agents} are a type of agents whose only interaction with the world is through radio communication. There are three types of central agents: \emph{Ambulance Centers}, \emph{Fire Stations} and \emph{Police Offices}, and they are represented as buildings.
+%%
+\subsection{Perception and Commands}
+%%
+The simulator has two perception modes: \emph{standard} and \emph{line of sight}. We will discuss just the latter, since it is the one used in competitions.
+
+Line of sight perception simulates visual perception of the agent: a vision range and a number of rays are defined and the agent percepts anything that is reached by these rays.
+%%
+\begin{figure}[htp]
+  \centering
+  \begin{subfigure}[hb]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figs/no_los}
+    \caption{No LoS}
+    \label{fig:los_a}
+  \end{subfigure}
+  \begin{subfigure}[hb]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figs/with_los}
+    \caption{LoS}
+    \label{fig:los_b}
+  \end{subfigure}
+  \caption{Normal viewer and LoS perception}
+  \label{fig:los}
+\end{figure}
+%%
+
+The set of currently visible entities for an agent is stored in a structure named \emph{ChangeSet}; entities present in it are automatically updated in its world model; that is, if an agent perceives a blockade it did not know that was there before, this blockade is automatically added to its world model. The opposite, though does not happen: if the agent does not perceive a blockade any more, nothing in its world model changes, even if it knew that there was a blockade there before. In that case, the agent will still think that there is a blockade in that road, even though such blockade has already been cleared. Thus, it is up to the agent to figure this out and modify its world model accordingly.
+%%
+\subsection{Communication}
+%%
+There are two forms of communication available in the simulator: \emph{direct communication} and \emph{radio communication}. Direct communication, done with the command \emph{speak}, is communication audible to humans within a radius from the emitter agent, as if the emitter shouted something.
+
+Radio communication is done with the command \emph{tell}, and transmits information to all agents that are signed up to the channel on which it was broadcasted. Radio communication channels are present in limited number, each one with a limited bandwidth.
+
+In both types of communication, the message has to be coded into a string of bytes before being sent; the receptor must decode it once it receives the message. Both types might be susceptible to message \emph{drop out}, where the message is not received by its targets; radio communication is also susceptible to message \emph{failure}, where the message is received empty.
+%%
+\bibliographystyle{apalike}
+\bibliography{references}
+%%
 \end{document}
+%%
