@@ -2,8 +2,8 @@
 %% Packages
 \usepackage[a4paper,top=2cm,left=2.5cm, right=2.5cm,bottom=3cm,footskip=0.75cm]{geometry}
 \usepackage[utf8]{inputenc}
-\usepackage[hidelinks]{hyperref}
-\usepackage{graphicx}
+\usepackage[hidelinks,dvipdfmx]{hyperref}
+\usepackage[dvipdfmx]{graphicx}
 \usepackage{epstopdf}
 \usepackage{subcaption}
 \usepackage[authoryear,round]{natbib}
@@ -133,8 +133,9 @@ If you are using Ubuntu, you can get and compile the ADF with the following comm
   \begin{tcolorbox}[title=Download ADF on Ubuntu, width=.98\linewidth]
   {\ttfamily\small
   \$ git clone https://github.com/roborescue/rcrs-adf-sample.git\\
-  \$ cd rcrs-adf-sample\\
-   \$ ./compile.sh
+   \$ cd rcrs-adf-sample\\
+   \$ java -jar ./library/rescue/adf/adf-core.jar -compile
+%   \$ ./compile.sh
    % Old \$ java -jar ./library/rescue/adf/adf-core.jar -compile\\
   }
   \end{tcolorbox}
