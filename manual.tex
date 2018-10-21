@@ -2,12 +2,11 @@
 %% Packages
 \usepackage[a4paper,top=2cm,left=2.5cm, right=2.5cm,bottom=3cm,footskip=0.75cm]{geometry}
 \usepackage[utf8]{inputenc}
-\usepackage[hidelinks,dvipdfmx]{hyperref}
+\usepackage[hidelinks,driverfallback=dvipdfmx]{hyperref}
 \usepackage[dvipdfmx]{graphicx}
 \usepackage{epstopdf}
 \usepackage{subcaption}
 \usepackage[authoryear,round]{natbib}
-
 \usepackage{tcolorbox}
 \usepackage{listings}
 \lstset{
@@ -30,7 +29,7 @@
   stringstyle = \scshape\scriptsize,
   tabsize = 2
 }
-
+%%
 \oddsidemargin -5.4mm
 \evensidemargin -5.4mm
 \textwidth 170mm
@@ -86,10 +85,8 @@ This manual assumes the simulator and agents will run in a Linux machine even th
        \url{https://github.com/roborescue/rcrs-server}.
  \item Change to the directory ``rcrs-server''.
        \begin{enumerate}
-	\item If you use macOS, patch the file ``boot/functions.sh''
-	      like\\
-
-	      ``\verb|sed -i -e "/readlink/s/^/#/" boot/functions.sh|''.
+         \item If you use macOS, patch the file ``boot/functions.sh'' like\\
+               ``\verb|sed -i -e "/readlink/s/^/#/" boot/functions.sh|''.
        \end{enumerate}
  \item Compile the simulator using the commands \texttt{gradle clean}
        and \texttt{gradle completeBuild}.
@@ -135,8 +132,6 @@ If you are using Ubuntu, you can get and compile the ADF with the following comm
   \$ git clone https://github.com/roborescue/rcrs-adf-sample.git\\
    \$ cd rcrs-adf-sample\\
    \$ java -jar ./library/rescue/adf/adf-core.jar -compile
-%   \$ ./compile.sh
-   % Old \$ java -jar ./library/rescue/adf/adf-core.jar -compile\\
   }
   \end{tcolorbox}
 \end{center}
@@ -151,7 +146,7 @@ To run the sample agents, you must open two terminal windows. One is used to run
 \subsubsection{Running the Simulation Server}
 %%
 Use one terminal window and move to the boot directory inside the simulator's folder (\texttt{rcrs-server}). Then, type \texttt{bash start-comprun.sh}. The sequence of commands are:
-
+%%
 \begin{center}
    \begin{tcolorbox}[title=Running Simulation Server, width=.98\linewidth]
     {\ttfamily
@@ -161,9 +156,10 @@ Use one terminal window and move to the boot directory inside the simulator's fo
     }
   \end{tcolorbox}
 \end{center}
+%%
 
 When the simulation server runs correctly, the window in Fig. \ref{fig:simulator01} will appear.
-
+%%
 \begin{figure}[ht]
  \begin{center}
   \includegraphics[width=.9\linewidth]{figs/simulator01.eps}
@@ -176,7 +172,7 @@ When the simulation server runs correctly, the window in Fig. \ref{fig:simulator
 \subsubsection{Running the ADF Sample Agents}
 %%
 After running the simulation server, move to \texttt{rcrs-adf-sample} directory on the other terminal window and run the agents by the following commands:
-
+%%
 \begin{center}
    \begin{tcolorbox}[title=Running Sample Agents, width=.98\linewidth]
     {\ttfamily
@@ -185,9 +181,10 @@ After running the simulation server, move to \texttt{rcrs-adf-sample} directory 
     }
   \end{tcolorbox}
 \end{center}
+%%
 
 If the agents can connect with the simulator, the state of the agents and a city are shown on the left-hand side in the window shown in Fig. \ref{fig:simulator01}. Then, the simulation is started as shown in Fig. \ref{fig:simulator02}.
-
+%%
 \begin{figure}[ht]
  \begin{center}
   \includegraphics[width=1.0\linewidth]{figs/simulator02.eps}
@@ -204,7 +201,7 @@ Agents can examine a simulation scenario by performing a precomputation of it be
 \subsubsection{Running the Simulation Server for Precomputation}
 %%
 Use one terminal window and move to the boot directory inside the simulator's folder (\texttt{rcrs-server}). Then, type \texttt{bash start-precompute.sh}. These commands are:
-
+%%
 \begin{center}
    \begin{tcolorbox}[title=Running Simulation Server, width=.98\linewidth]
     {\ttfamily
@@ -219,7 +216,7 @@ Use one terminal window and move to the boot directory inside the simulator's fo
 \subsubsection{Running the ADF Sample Agents for Precomputation}
 %%
 After running the simulation server for the precomputation, move to the ADF directory on the other terminal window and run the agents executing the commands:
-
+%%
 \begin{center}
    \begin{tcolorbox}[title=Running Sample Agents, width=.98\linewidth]
     {\ttfamily
@@ -242,7 +239,7 @@ After running the simulation server for the precomputation, move to the ADF dire
 \subsubsection{Running the Simulation}
 %%
 When the precomputation is completed, push \texttt{Control-C} and type \texttt{sh kill.sh} to stop the simulation server of running. Then, type \texttt{bash start-comprun.sh} to start the simulation server again to run the simulation scenario. The commands are:
-
+%%
 \begin{center}
    \begin{tcolorbox}[title=Running Simulation Server, width=.98\linewidth]
     {\ttfamily
@@ -252,10 +249,12 @@ When the precomputation is completed, push \texttt{Control-C} and type \texttt{s
     }
   \end{tcolorbox}
 \end{center}
-
+%%
+%%
 \subsubsection{Running the ADF Sample Agents}
+%%
 After running the simulation server, move to the ADF directory on the other terminal window and run the agents using the commands:
-
+%%
 \begin{center}
    \begin{tcolorbox}[title=Running Sample Agents, width=.98\linewidth]
     {\ttfamily
@@ -264,10 +263,14 @@ After running the simulation server, move to the ADF directory on the other term
     }
   \end{tcolorbox}
 \end{center}
-
+%%
+%%
 \section{Simulation Server Options}
+%%
 \subsection{Directories}
+%%
 Important directories of the simulation server are:
+%%
 \begin{itemize}
  \item \texttt{boot/}: scripts to run the simulation server
        \begin{itemize}
@@ -618,6 +621,7 @@ commentstyle = \fontfamily{ptm}\selectfont\scriptsize\color{red},
 stringstyle = \scshape\scriptsize,
 tabsize = 2,
 }
+%%
 \begin{lstlisting}[caption=calc(),label=astarpathplan2]
     @Override
     public PathPlanning calc() {
@@ -671,6 +675,7 @@ tabsize = 2,
         }
     }
 \end{lstlisting}
+%%
 
 \lstset{%
 language={Java},%
@@ -693,7 +698,6 @@ commentstyle = \fontfamily{ptm}\selectfont\scriptsize\color{red},
 stringstyle = \scshape\scriptsize,
 tabsize = 2,
 }
-
 \begin{lstlisting}[caption=Node Class,label=astarpathplan3]
 private class Node {
     EntityID id;
@@ -787,6 +791,7 @@ CommandExecutorScoutPolice.PathPlanning : myteam.module.algorithm.AStarPathPlann
  \end{center}
 \end{figure}
 %%
+\newpage
 %%
 \section{RoboCup Rescue Simulation Server}
 %%
@@ -805,10 +810,10 @@ The simulator is in fact divided into many other simulators:
 %%
 
 These simulators establish connections to the \emph{kernel simulator}, responsible for coordinating the simulators' processes and centralizing the data they generate.
-
+%%
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.5\textwidth]{figs/simulator_architecture}
+  \includegraphics[width=0.5\textwidth]{figs/simulator_architecture.eps}
   \caption{RoboCup Rescue Agent Simulation platform architecture~\cite{skinnerRamchurn2010}}
   \label{fig:simulator_architecture}
 \end{figure}
@@ -840,7 +845,7 @@ Several objects are represented in the simulator as depicted in Figure~\ref{fig:
 %%
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=1.0\textwidth]{figs/entities}
+  \includegraphics[width=1.0\textwidth]{figs/entities.eps}
   \caption{Entities of the simulator}
   \label{fig:entities}
 \end{figure}
@@ -885,26 +890,26 @@ Buildings group all kinds of buildings in the simulator: besides the regular one
   \centering
   \begin{subfigure}[hb]{0.45\textwidth}
     \centering
-    \includegraphics[scale=0.6]{figs/refuge}
+    \includegraphics[scale=0.6]{figs/refuge.eps}
     \caption{Refuge}
     \label{fig:refuge}
   \end{subfigure}
   \begin{subfigure}[hb]{0.45\textwidth}
     \centering
-    \includegraphics[scale=0.6]{figs/ambulance_central}
+    \includegraphics[scale=0.6]{figs/ambulance_central.eps}
     \caption{Ambulance Central}
     \label{fig:ambulance_central}
   \end{subfigure}
 
   \begin{subfigure}[hb]{0.45\textwidth}
     \centering
-    \includegraphics[scale=0.6]{figs/fire_station}
+    \includegraphics[scale=0.6]{figs/fire_station.eps}
     \caption{Fire Station}
     \label{fig:fire_station}
   \end{subfigure}
   \begin{subfigure}[hb]{0.45\textwidth}
     \centering
-    \includegraphics[scale=0.6]{figs/police_office}
+    \includegraphics[scale=0.6]{figs/police_office.eps}
     \caption{Police Office}
     \label{fig:police_office}
   \end{subfigure}
@@ -943,7 +948,7 @@ Regular buildings are represented as polygons of various colors, depending of th
 %%
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=1.0\textwidth]{figs/building_status}
+  \includegraphics[width=1.0\textwidth]{figs/building_status.eps}
   \caption{Possible status of regular buildings}
   \label{fig:building_status}
 \end{figure}
@@ -1016,13 +1021,13 @@ Line of sight perception simulates visual perception of the agent: a vision rang
   \centering
   \begin{subfigure}[hb]{0.45\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{figs/no_los}
+    \includegraphics[width=\textwidth]{figs/no_los.eps}
     \caption{No LoS}
     \label{fig:los_a}
   \end{subfigure}
   \begin{subfigure}[hb]{0.45\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{figs/with_los}
+    \includegraphics[width=\textwidth]{figs/with_los.eps}
     \caption{LoS}
     \label{fig:los_b}
   \end{subfigure}
