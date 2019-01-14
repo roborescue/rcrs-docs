@@ -1,9 +1,15 @@
 \documentclass{article}
 %% Packages
-\usepackage[a4paper,top=2cm,left=2.5cm, right=2.5cm,bottom=3cm,footskip=0.75cm]{geometry}
+\usepackage[a4paper,
+            top=2cm,
+            left=2.5cm,
+            right=2.5cm,
+            bottom=3cm,
+            footskip=0.75cm]{geometry}
+\usepackage{ascmac}
 \usepackage[utf8]{inputenc}
-\usepackage[hidelinks,driverfallback=dvipdfmx]{hyperref}
-\usepackage[dvipdfmx]{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{graphicx}
 \usepackage{epstopdf}
 \usepackage{subcaption}
 \usepackage[authoryear,round]{natbib}
@@ -37,13 +43,12 @@
 \headheight 0pt
 \headsep 0pt
 \textheight 257mm
-\usepackage{ascmac}
 %%
 \begin{document}
 %%
 \title{RoboCup Rescue Simulator and Agent Development Framework Manual}
 \author{}
-\date{October 15, 2018}
+\date{\today}
 %%
 \maketitle
 %%
@@ -72,7 +77,7 @@ This manual assumes the simulator and agents will run in a Linux machine even th
  \begin{itemize}
   \item Java OpenJDK 8+\footnote{\url{https://openjdk.java.net/}}
   \item Git
-  \item Gradle
+  \item Gradle 3.4+
   \item Utilities like \emph{wget}, \emph{bash}, \emph{xterm}, \emph{tar}, \emph{gzip}, etc.\\
         If you are using Ubuntu, all of these software are present in the
         default software repositories.
