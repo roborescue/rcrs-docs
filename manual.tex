@@ -93,8 +93,8 @@ This manual assumes the simulator and agents will run in a Linux machine even th
          \item If you use macOS, patch the file ``boot/functions.sh'' like\\
                ``\verb|sed -i -e "/readlink/s/^/#/" boot/functions.sh|''.
        \end{enumerate}
- \item Compile the simulator using the commands \texttt{gradle clean}
-       and \texttt{gradle completeBuild}.
+ \item Compile the simulator using the commands \texttt{./gradlew clean}
+       and \texttt{./gradlew completeBuild}.
  \item Check the message at the end of the installation.
        If the installation is successfully completed, you get the message \texttt{BUILD SUCCESSFUL}; otherwise you get \texttt{BUILD FAILED}.
 \end{enumerate}
@@ -107,8 +107,8 @@ If you are using Ubuntu, the installation proceeds according to the commands bel
   \$ git clone https://github.com/roborescue/rcrs-server.git\\
    \$ cd rcrs-server\\
    (\$ sed -i -e \verb|"/readlink/s/^/#/"| boot/functions.sh \# Only required for macOS)\\
-  \$ gradle clean\\
-  \$ gradle completeBuild
+  \$ ./gradlew clean\\
+  \$ ./gradlew completeBuild
   }
   \end{tcolorbox}
 \end{center}
