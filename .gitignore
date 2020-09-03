@@ -7,4 +7,6 @@ __latex*
 *.out
 *.synctex.gz
 *.toc
-*.pdf
+
+# Visulal Studio Code
+.vscode
