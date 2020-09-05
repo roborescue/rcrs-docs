@@ -1,7 +1,7 @@
 = RoboCup Rescue Simulator Manual
 :author: RoboCup Rescue Simulation Team
 :revnumber: 1.3
-:revdate: September 3, 2020
+:revdate: September 5, 2020
 :sectids!:
 :sectnums:
 :sectnumlevels: 3
@@ -22,22 +22,13 @@
 
 <<<
 
-[#introduction]
-== Introduction
-A _disaster_ may be defined as a crisis situation causing widespread human, material, economical and environmental damages that surpasses the system's capacity to recover. There are two main ways of treating a disaster:
-
-. Preventing it from happening, which can be done through identifying its causes and preventing them from taking place.
-. Managing its impacts once they happen through the application of previously established governmental policies and strategies.
-
-The former option is usually more desirable, since it is very effective and very little disrupting. However, this is not always possible, since some events are too intense to be avoided even if forecasted with great antecedence, and others are unpredictable. Thus, the management option becomes necessary for the mitigation of the disaster's impacts.
-
-After the 1995 Kobe earthquake events, Japanese researchers came up with the idea of developing a simulator that reproduces conditions similar to a urban post-earthquake in order to test mitigation strategies for this kind of disaster. They also organized a competition, the RoboCup Rescue Agent Simulation League, in which people from all over the world would be able to demonstrate their advancements in the coordination of rescuing agents teams running in this simulator and to help in the development of policies and strategies to mitigate the impact of such disasters.
-
-The purpose of this manual is to facilitate the understanding of the first contact with the RoboCup Rescue Simulation server and to help people interested in participating in RoboCup Rescue Agent Simulation competitions.
+[#purpose]
+== Purpose
+The manual facilitates the understanding of the RoboCup Rescue Simulation server and helps people interested in participating in RoboCup Rescue Agent Simulation competitions.
 
 [#installation]
 == Installation
-This manual assumes the simulator and agents will run in a Linux machine even though it is possible to run them in Microsoft Windows or Apple macOS. We recommend to use Linux because it is open-source and most of the distributions have a good support from the users' community. If you have never used Linux before and intend to, we recommend starting with a user-friendly distribution, such as https://www.ubuntu.com/[Ubuntu] or https://getfedora.org[Fedora].
+This manual assumes the simulator will run in a Linux machine even though it is possible to run them in Microsoft Windows or Apple macOS. We recommend to use Linux because it is open-source and most of the distributions have a good support from the users' community. If you have never used Linux before and intend to, we recommend starting with a user-friendly distribution, such as https://www.ubuntu.com/[Ubuntu] or https://getfedora.org[Fedora].
 
 [#requirements]
 === Software Requirements
@@ -50,15 +41,16 @@ This manual assumes the simulator and agents will run in a Linux machine even th
 
 [#download]
 === Download
-You can download the simulation server by cloning it from the `https://github.com/roborescue/rcrs-server` repository. Clone the simulator server using the command
-[source,bash]
+You can download the simulation server by cloning the `https://github.com/roborescue/rcrs-server` repository. Clone the simulator server using the command
+
+[source,shell]
 ----
 git clone https://github.com/roborescue/rcrs-server.git
 ----
 
 [#directories]
 === Directories
-The `rcrs-server` contain multiple directories. The important directories of the server are:
+The `rcrs-server` contains multiple directories. The important directories of the server are:
 
 * `boot`: scripts to run the simulation server
 ** `boot/config/`: configuration files
@@ -79,13 +71,14 @@ The simulation server has to be compiled on your machine to generate the require
 . Change to the directory `rcrs-server`
 .. If macOS, patch the file `boot/functions.sh` using command +
      `sed -i -e "/readlink/s/^/#/" boot/functions.sh`
-. Compile the simulator using the commands `./gradlew completeBuild`
+. Compile the simulator using the command `./gradlew completeBuild`
 . Check the message at the end of the installation. If the installation is successfully completed, the message `BUILD SUCCESSFUL` is displayed; otherwise `BUILD FAILED` is displayed.
 
 [#example]
 === Example
 In Ubuntu, the installation proceeds according to the following commands.
-[source,bash]
+
+[source,shell]
 .Installation on Ubuntu
 ----
 $ git clone https://github.com/roborescue/rcrs-server.git
@@ -112,7 +105,7 @@ In the precomputation mode, the simulator connects one agent of each type and al
 
 The sequence of commands to run the simulation server in precomputation mode are:
 
-[source,bash]
+[source,shell]
 .Running simulation server in precomputation mode
 ----
 $ cd rcrs-server
@@ -122,11 +115,11 @@ $ bash start-precompute.sh
 
 After running the simulation server, run the agents. Once the precomputation is completed, push _Control-C_ and type `sh kill.sh` to stop the simulation server of running.
 
-[source,bash]
+[source,shell]
 .Stop running simulation server in precomputation mode
 ----
 Control-C
-$ sh kill.sh
+$ bash kill.sh
 ----
 
 [#normal_mode]
@@ -135,7 +128,7 @@ In the normal mode, the simulator connects all agents defined in the scenario an
 
 The sequence of commands to run the simulation server in normal mode are:
 
-[source,bash]
+[source,shell]
 .Running simulation server in normal mode
 ----
 $ cd rcrs-server
@@ -145,7 +138,7 @@ $ bash start-comprun.sh
 
 After running the simulation server, run the agents. Once the simulation is completed, the server will stop automatically.
 
-[#options]
+[#parameters]
 === Parameter Options
 The following parameters can be used to run the simulation server:
 
@@ -155,12 +148,12 @@ The following parameters can be used to run the simulation server:
 
 These parameters can be used at running a precomputaion and a normal simulation. You must use the same parameters for `MAPDIR` and `CONFIGDIR` to run a simulation server in precomputation and normal mode. An example of how to run the simulation server using these parameters is:
 
-[source,bash]
+[source,shell]
 .Running Simulation Server with Options
 $ bash start-precompute.sh -m ../maps/gml/kobe/map -l logs2
 (After completing precomputation)
 Control-C
-$ sh kill.sh
+$ bash kill.sh
 $ bash start-comprun.sh -m ../maps/gml/kobe/map -l logs2
 
 [#tools]
@@ -171,7 +164,7 @@ The simulation server comes with several tools to support the development of new
 === Map editor
 Open a terminal window, navigate to the `rcrs-server` root directory and execute
 
-[source,bash]
+[source,shell]
 ----
 $ ./gradlew gmlEditor --args=<map file path>
 ----
@@ -182,7 +175,7 @@ where `--args=<map file path>` is optional. The default map file path is `maps/g
 === Scenario Editor
 Open a terminal window, navigate to the `rcrs-server` root directory and execute
 
-[source,bash]
+[source,shell]
 ----
 $ ./gradlew scenarioEditor --args=<scenario path>
 ----
@@ -193,7 +186,7 @@ where `--args=<scenario path>` is optional. The default scenario path is `maps/g
 === Random Scenario
 Open a terminal window, navigate to the `rcrs-server` root directory and execute
 
-[source,bash]
+[source,shell]
 ----
 $ ./gradlew randomScenario --args=<map path>
 ----
@@ -204,7 +197,7 @@ where `--args=<map path>` is optional. The default map path is `maps/gml/test/ma
 === Log Viewer
 Open a terminal window, navigate to the `rcrs-server` root directory and execute
 
-[source,bash]
+[source,shell]
 ----
 $ ./gradlew logViewer --args='-c config/logviewer.cfg <log path>'
 ----
