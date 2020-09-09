@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
 <meta name="author" content="RoboCup Rescue Simulation Team">
-<title>RoboCup Rescue Simulator Manual</title>
+<title>RoboCup Rescue Map and Scenario Creation Manual</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -439,65 +439,48 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1>RoboCup Rescue Simulator Manual</h1>
+<h1>RoboCup Rescue Map and Scenario Creation Manual</h1>
 <div class="details">
 <span id="author" class="author">RoboCup Rescue Simulation Team</span><br>
-<span id="revnumber">version 1.3,</span>
-<span id="revdate">September 5, 2020</span>
+<span id="revnumber">version 2.0,</span>
+<span id="revdate">September 9, 2020</span>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#purpose">1. Purpose</a></li>
-<li><a href="#installation">2. Installation</a>
+<li><a href="#Tools">2. Tools</a>
 <ul class="sectlevel2">
-<li><a href="#requirements">2.1. Software Requirements</a></li>
-<li><a href="#download">2.2. Download</a></li>
-<li><a href="#directories">2.3. Directories</a></li>
-<li><a href="#compiling">2.4. Compiling</a></li>
-<li><a href="#example">2.5. Example</a></li>
+<li><a href="#openstreetmap">2.1. OpenStreetMap</a></li>
+<li><a href="#gml">2.2. Geographic Markup Language</a></li>
+<li><a href="#josm">2.3. Java OpenStreetMap editor</a></li>
+<li><a href="#osm2gml">2.4. <code>osm2gml</code></a></li>
 </ul>
 </li>
-<li><a href="#running">3. Running</a>
+<li><a href="#creation_process">3. Map and scenario creation process</a>
 <ul class="sectlevel2">
-<li><a href="#precomputation_mode">3.1. Precomputation Mode</a></li>
-<li><a href="#normal_mode">3.2. Normal Mode</a></li>
-<li><a href="#parameters">3.3. Parameter Options</a></li>
-</ul>
-</li>
-<li><a href="#tools">4. Tools</a>
-<ul class="sectlevel2">
-<li><a href="#map-editor">4.1. Map editor</a></li>
-<li><a href="#scenario-editor">4.2. Scenario Editor</a></li>
-<li><a href="#random-scenario">4.3. Random Scenario</a></li>
-<li><a href="#log-viewer">4.4. Log Viewer</a></li>
-<li><a href="#osm2gml">4.5. <code>osm2gml</code></a></li>
-</ul>
-</li>
-<li><a href="#design">5. Simulator Design</a>
-<ul class="sectlevel2">
-<li><a href="#architecture">5.1. Architecture</a></li>
-<li><a href="#entities">5.2. Entities</a>
+<li><a href="#map_capturing">3.1. Map capturing</a>
 <ul class="sectlevel3">
-<li><a href="#blockades">5.2.1. Blockades</a></li>
-<li><a href="#area">5.2.2. Area</a></li>
-<li><a href="#buildings">5.2.3. Buildings</a></li>
-<li><a href="#roads">5.2.4. Roads</a></li>
-<li><a href="#humans">5.2.5. Humans</a></li>
-<li><a href="#civilians">5.2.6. Civilians</a></li>
+<li><a href="#josm_run">3.1.1. Download and run JOSM</a></li>
+<li><a href="#map_select">3.1.2. Select and download the region of the map</a></li>
+<li><a href="#map_save">3.1.3. Save the OSM file</a></li>
 </ul>
 </li>
-<li><a href="#agents">5.3. Agents</a>
+<li><a href="#map_conversion">3.2. Convert OSM map into GML map format</a>
 <ul class="sectlevel3">
-<li><a href="#platoon_agents">5.3.1. Platoon agents</a></li>
-<li><a href="#centre_agents">5.3.2. Centre Agents</a></li>
+<li><a href="#adjust_osm">3.2.1. Adjusting the OSM map</a></li>
+<li><a href="#running_converter">3.2.2. Running the map converter</a></li>
 </ul>
 </li>
-<li><a href="#perception_commands">5.4. Perception and Commands</a></li>
-<li><a href="#communication">5.5. Communication</a></li>
+<li><a href="#map_scenario">3.3. Create a Scenario</a>
+<ul class="sectlevel3">
+<li><a href="#map_directory">3.3.1. Map directory</a></li>
+<li><a href="#gml_layout">3.3.2. GML map file layout</a></li>
+<li><a href="#create_scenario">3.3.3. Creating a scenario</a></li>
 </ul>
 </li>
-<li><a href="#references">References</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -511,300 +494,251 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="purpose">1. Purpose</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The manual facilitates the understanding of the RoboCup Rescue Simulation server and helps people interested in participating in RoboCup Rescue Agent Simulation competitions.</p>
+<p>The RoboCup Rescue Simulator comes with some example maps that can be used to test and analyze a team of agents' performance. Although useful, these different maps do not represent all possible situations to evaluate a strategy or overall performance of a team of agents. Furthermore, teams would benefit to assess their performance in a larger number and variate of maps. Hence, it is useful to be able to create new maps for the RoboCup Rescue Simulator.</p>
+</div>
+<div class="paragraph">
+<p>This tutorial describes the procedure to create maps and scenarios compatible with the RoboCup Rescue Simulator. The tutorial illustrates the basic steps to create a map and scenario using the creation of the map of the University of São Paulo, Brazil as example.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="installation">2. Installation</h2>
+<h2 id="Tools">2. Tools</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="openstreetmap">2.1. OpenStreetMap</h3>
+<div class="paragraph">
+<p><a href="https://www.openstreetmap.org">OpenStreetMap</a> (OSM) is a free worldwide map web platform developed collaboratively. OpenStreetMap provides free to use geographic information from many places around the world. It was created under the project <em>Planet OSM</em> aimed to provide geographic information in XML format, containing description of Nodes, Ways, and Relations. A new version of the project is released every week in a single XML file (around 93GB compressed at September 5, 2020). The entire map, or the latest weekly changeset, can be downloaded at <a href="https://planet.openstreetmap.org/" class="bare">https://planet.openstreetmap.org/</a>. <a href="#fig:osm_layout">Figure 1</a> shows the layout of a reduced <code>.osm</code> file.</p>
+</div>
+<div id="fig:osm_layout" class="imageblock">
+<div class="content">
+<img src="images/osm_layout.png" alt="OSM Layout">
+</div>
+<div class="title">Figure 1. OSM Layout</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="gml">2.2. Geographic Markup Language</h3>
+<div class="paragraph">
+<p><a href="https://www.iso.org/standard/75676.html">Geographic Markup Language</a> (GML) is a XML-­based grammar used to describe interchangeable geographic information. It was defined by the <a href="https://www.ogc.org/">Open Geospatial Consortium</a>, and it is largely used for providing a rich set of markup primitives that allow the creation of application specific schemas, such as the definition of Buildings and Roads. The RoboCup Rescue Simulator uses the GML format for representing the entities in its maps.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="josm">2.3. Java OpenStreetMap editor</h3>
+<div class="paragraph">
+<p><a href="https://josm.openstreetmap.de/">Java OpenStreetMap Editor</a> (JOSM) is an open Java-­based OpenStreetMap editor, an application originally developed by Immanuel Scholz and currently maintained by Dirk Stocker. JOSM can be used to download, edit, and convert maps from OSM to the GML format. The conversion requires a plugin that can be downloaded at <a href="https://github.com/roborescue/osm-converter">RCR-converter</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="osm2gml">2.4. <code>osm2gml</code></h3>
+<div class="paragraph">
+<p>The <code>osm2gml</code> enables the conversion from OSM to GML standard, transforming the XML file from one format to the other. The conversion process changes the features in the original map to make it compatible with the GML representation of the maps in the RoboCup Rescue Simulator. The <code>osm2gml</code> is part of the RoboCup Rescue Server project (see README at <a href="https://github.com/roborescue/rcrs-server">RoboCup Rescue Server</a>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creation_process">3. Map and scenario creation process</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This manual assumes the simulator will run in a Linux machine even though it is possible to run them in Microsoft Windows or Apple macOS. We recommend to use Linux because it is open-source and most of the distributions have a good support from the users' community. If you have never used Linux before and intend to, we recommend starting with a user-friendly distribution, such as <a href="https://www.ubuntu.com/">Ubuntu</a> or <a href="https://getfedora.org">Fedora</a>.</p>
-</div>
-<div class="sect2">
-<h3 id="requirements">2.1. Software Requirements</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://openjdk.java.net/">Java OpenJDK 8+</a></p>
-</li>
-<li>
-<p><a href="https://git-scm.com/">Git</a></p>
-</li>
-<li>
-<p><a href="https://gradle.org/">Gradle</a></p>
-</li>
-<li>
-<p>Utilities like <code>wget</code>, <code>bash</code>, <code>xterm</code>, <code>tar</code>, <code>gzip</code>, etc.<br>
-<strong>Note:</strong> If you are using Ubuntu, all of these utilities are present in the default software repositories.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="download">2.2. Download</h3>
-<div class="paragraph">
-<p>You can download the simulation server by cloning the <code><a href="https://github.com/roborescue/rcrs-server" class="bare">https://github.com/roborescue/rcrs-server</a></code> repository. Clone the simulator server using the command</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="shell">git clone https://github.com/roborescue/rcrs-server.git</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="directories">2.3. Directories</h3>
-<div class="paragraph">
-<p>The <code>rcrs-server</code> contains multiple directories. The important directories of the server are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>boot</code>: scripts to run the simulation server</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>boot/config/</code>: configuration files</p>
-</li>
-<li>
-<p><code>boot/logs/</code>: text log files</p>
-</li>
-<li>
-<p><code>boot/records/</code>: JSON log files</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><code>build/</code>: compiled Java classes</p>
-</li>
-<li>
-<p><code>docs/</code>: documentation</p>
-</li>
-<li>
-<p><code>jars/</code>: simulator JAR files</p>
-</li>
-<li>
-<p><code>lib/</code>: external libraries</p>
-</li>
-<li>
-<p><code>maps/</code>: maps and scenarios</p>
-</li>
-<li>
-<p><code>modules/</code>: simulator source code</p>
-</li>
-<li>
-<p><code>oldsims/</code>: old simulator source code</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="compiling">2.4. Compiling</h3>
-<div class="paragraph">
-<p>The simulation server has to be compiled on your machine to generate the required JAR files to run the simulator. Execute the steps below to compile the simulation server.</p>
+<p>In a nutshell, the process of creating a map for the RoboCup Rescue Simulator is comprised of 3 basic steps:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Change to the directory <code>rcrs-server</code></p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
+<p>Capture the map in a OSM file format (<code>.osm</code> extension)<br>
+The JOSM editor is used to browse through the OSM worldwide map, select the wanted area of the map, and export the map area information as an <code>.osm</code> file. <a href="#map_capturing">Section 3.1</a> illustrates in detail how to perform these tasks.</p>
+</li>
 <li>
-<p>If macOS, patch the file <code>boot/functions.sh</code> using command<br>
-<code>sed -i -e "/readlink/s/^/#/" boot/functions.sh</code></p>
+<p>Convert the OSM file into the GML file format<br>
+The <code>osm2gml</code> tool is used to convert the OSM file into a GML file format. If the conversion fails, perform the map capture again using the JOSM. <a href="#map_conversion">Section 3.2</a> illustrates in detail how to use the <code>osm2gml</code> tool and some recurrent changes that must be made on the OSM map before converting it.</p>
+</li>
+<li>
+<p>Create a valid RoboCup Rescue scenario for the map on the simulator<br>
+To use the map on the RoboCup Rescue Simulator, a scenario has to be created setting the initial position of agents, special buildings like Ambulance Center, Fire Brigade, Police Station, and Refuges. <a href="#map_scenario">Section 3.3</a> illustrates in detail how to setup a scenario associated to a specific map.</p>
 </li>
 </ol>
 </div>
-</li>
-<li>
-<p>Compile the simulator using the command <code>./gradlew completeBuild</code></p>
-</li>
-<li>
-<p>Check the message at the end of the installation. If the installation is successfully completed, the message <code>BUILD SUCCESSFUL</code> is displayed; otherwise <code>BUILD FAILED</code> is displayed.</p>
-</li>
-</ol>
-</div>
-</div>
 <div class="sect2">
-<h3 id="example">2.5. Example</h3>
+<h3 id="map_capturing">3.1. Map capturing</h3>
 <div class="paragraph">
-<p>In Ubuntu, the installation proceeds according to the following commands.</p>
+<p>The map capturing is performed using the JOSM tool and it is comprised of another 3 stages: install and run the JOSM tool <a href="#josm_run">Section 3.1.1</a>, select and download locally a region of the map <a href="#map_select">Section 3.1.2</a>, and save it as an <code>.osm</code> file <a href="#map_save">Section 3.1.3</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="josm_run">3.1.1. Download and run JOSM</h4>
+<div class="paragraph">
+<p>First, download the JOSM tool from the <a href="http://josm.openstreetmap.de/" class="bare">http://josm.openstreetmap.de/</a>. There are multiple alternatives to download JOSM, i.e., Installer, Launcher, JAR file. The recommended alternative is the JAR file, which is compatible with any environment supporting Java 8+. Once downloaded, execute the JAR file as</p>
 </div>
 <div class="listingblock">
-<div class="title">Installation on Ubuntu</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="shell"><span class="nv">$ </span>git clone https://github.com/roborescue/rcrs-server.git
-<span class="nv">$ </span><span class="nb">cd </span>rcrs-server
-<span class="nv">$ </span>./gradlew completeBuild</code></pre>
+<pre class="rouge highlight"><code data-lang="shell"><span class="nv">$ </span>java <span class="nt">-jar</span> josm-tested.jar</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The following message will be displayed if the installation is successfully completed.</p>
+<p><a href="#fig:josm_editor">Figure 2</a> illustrates the JOSM editor interface.</p>
 </div>
-<div class="listingblock">
-<div class="title">Install Completion</div>
+<div id="fig:josm_editor" class="imageblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="text">BUILD SUCCESSFUL in 2s
-1 actionable task: 1 executed</code></pre>
+<img src="images/josm_editor.png" alt="JOSM Editor">
+</div>
+<div class="title">Figure 2. JOSM Editor</div>
 </div>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="running">3. Running</h2>
-<div class="sectionbody">
+<div class="sect3">
+<h4 id="map_select">3.1.2. Select and download the region of the map</h4>
 <div class="paragraph">
-<p>There are two modes of execution of the simulation server: <strong>Precomputation</strong> and <strong>Normal</strong>.</p>
+<p>On the toolbar, select the green arrow button to "Download Map from OSM Server" and a zoomed out map is shown (see <a href="#fig:josm_map">Figure 3</a>).</p>
 </div>
-<div class="sect2">
-<h3 id="precomputation_mode">3.1. Precomputation Mode</h3>
-<div class="paragraph">
-<p>In the precomputation mode, the simulator connects one agent of each type and allows them to write the computation results.</p>
-</div>
-<div class="paragraph">
-<p>The sequence of commands to run the simulation server in precomputation mode are:</p>
-</div>
-<div class="listingblock">
-<div class="title">Running simulation server in precomputation mode</div>
+<div id="fig:josm_map" class="imageblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="shell"><span class="nv">$ </span><span class="nb">cd </span>rcrs-server
-<span class="nv">$ </span><span class="nb">cd </span>boot
-<span class="nv">$ </span>bash start-precompute.sh</code></pre>
+<img src="images/josm_map.png" alt="JOSM Map">
 </div>
+<div class="title">Figure 3. JOSM Zoomed Map</div>
 </div>
 <div class="paragraph">
-<p>After running the simulation server, run the agents. Once the precomputation is completed, push <em>Control-C</em> and type <code>sh kill.sh</code> to stop the simulation server of running.</p>
+<p>Manually zoom in until the region of interest is found. After finding the region of interest, select the specific area you want to download, and select the <em>Download</em> button to download the selected region. <a href="#fig:map_usp">Figure 4</a> shows the selected area corresponding to the University of São Paulo.</p>
 </div>
-<div class="listingblock">
-<div class="title">Stop running simulation server in precomputation mode</div>
+<div id="fig:map_usp" class="imageblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="shell">Control-C
-<span class="nv">$ </span>bash kill.sh</code></pre>
+<img src="images/map_usp.png" alt="University of São Paulo">
+</div>
+<div class="title">Figure 4. JOSM University of São Paulo (USP) map selection</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="map_save">3.1.3. Save the OSM file</h4>
+<div class="paragraph">
+<p>After downloading the area of the map from the OpenStreetMap server, JOSM will open the edit screen with the downloaded map on display. Before starting editing it, save the map using the <code>File</code> -­&gt; <code>Save As..</code> menu options (see <a href="#fig:map_save">Figure 5</a>).</p>
+</div>
+<div id="fig:map_save" class="imageblock">
+<div class="content">
+<img src="images/map_save.png" alt="Downloaded University of São Paulo (USP) map">
+</div>
+<div class="title">Figure 5. JOSM Downloaded University of São Paulo (USP) map</div>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="normal_mode">3.2. Normal Mode</h3>
+<h3 id="map_conversion">3.2. Convert OSM map into GML map format</h3>
 <div class="paragraph">
-<p>In the normal mode, the simulator connects all agents defined in the scenario and allows them to use the precomputation output.</p>
+<p>After saving the map in OSM format, there is the need to convert it into the GML format compatible with the RoboCup Rescue Simulator using the <code>osm2gml</code> tool. The OSM map, however, normally contains some kinds of shapes and streets that causes the conversion to fail, and some buildings and streets not marked as such, which makes them disappear in the conversion process. <a href="#adjust_osm">Section 3.2.1</a> describe some of these problems and how to overcome them.</p>
 </div>
+<div class="sect3">
+<h4 id="adjust_osm">3.2.1. Adjusting the OSM map</h4>
 <div class="paragraph">
-<p>The sequence of commands to run the simulation server in normal mode are:</p>
+<p>In order to make the map convertible to the GML format, some changes have to be made on the original OSM map.</p>
 </div>
-<div class="listingblock">
-<div class="title">Running simulation server in normal mode</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="shell"><span class="nv">$ </span><span class="nb">cd </span>rcrs-server
-<span class="nv">$ </span><span class="nb">cd </span>boot
-<span class="nv">$ </span>bash start-comprun.sh</code></pre>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The problems reported here are not exhaustive, but purely based on experience during the creation of the University of São Paulo map. Some of these problems may not show up in other map conversions and new problems may arise.
+</td>
+</tr>
+</table>
 </div>
-</div>
-<div class="paragraph">
-<p>After running the simulation server, run the agents. Once the simulation is completed, the server will stop automatically.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="parameters">3.3. Parameter Options</h3>
-<div class="paragraph">
-<p>The following parameters can be used to run the simulation server:</p>
-</div>
+<div class="sect4">
+<h5 id="buildings">3.2.1.1. Buildings</h5>
 <div class="ulist">
 <ul>
 <li>
-<p><code>-m MAPDIR</code> or <code>--map MAPDIR</code>, where <code>MAPDIR</code> is the path to the directory containing the map you want to run (default is <code>../maps/gml/test/map</code>).</p>
-</li>
-<li>
-<p><code>-c CONFIGDIR</code> or <code>--config CONFIGDIR</code>, where <code>CONFIGDIR</code> is the directory containing the configuration associated with a map (default is <code>../maps/gml/test/config</code>).</p>
-</li>
-<li>
-<p><code>-l LOGDIR</code> or <code>--log LOGDIR</code>, where <code>LOGDIR</code> is the directory where the log files will be stored (default is <code>./logs</code>).</p>
+<p>Remove Buildings from outermost shapes</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>These parameters can be used at running a precomputaion and a normal simulation. You must use the same parameters for <code>MAPDIR</code> and <code>CONFIGDIR</code> to run a simulation server in precomputation and normal mode. An example of how to run the simulation server using these parameters is:</p>
+<p>Some of the buildings overlap with the outermost shape in the map. The converter interprets all buildings overlapping with the outermost shape as only one, the outermost one, eliminating all buildings. To prevent this situation, it is necessary to remove the outermost shape, allowing the buildings to be processed separately. In order to remove the outermost shape, click in one of its edges, then press <code>Delete</code>. <a href="#fig:outermost_shape">Figure 6</a> illustrates the case of multiple buildings inside another shape.</p>
 </div>
-<div class="listingblock">
-<div class="title">Running Simulation Server with Options</div>
+<div id="fig:outermost_shape" class="imageblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="shell"><span class="nv">$ </span>bash start-precompute.sh <span class="nt">-m</span> ../maps/gml/kobe/map <span class="nt">-l</span> logs2
-<span class="o">(</span>After completing precomputation<span class="o">)</span>
-Control-C
-<span class="nv">$ </span>bash kill.sh
-<span class="nv">$ </span>bash start-comprun.sh <span class="nt">-m</span> ../maps/gml/kobe/map <span class="nt">-l</span> logs2</code></pre>
+<img src="images/outermost_shape.png" alt="Outermost Shape">
 </div>
+<div class="title">Figure 6. Outermost Shape</div>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>Making <em>Buildings</em> as <em>Building</em></p>
+</li>
+</ul>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="tools">4. Tools</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>The simulation server comes with several tools to support the development of new maps and scenarios as well as replaying of the simulation.</p>
+<p>Because most of the times shapes corresponding to <em>Buildings</em> in the original OSM map are not marked as buildings, the converter does not generate a corresponding building at the resulting GML map. Hence, it is necessary to identify manually all the non-marked buildings in the OSM map. To set one shape as Building, select the shape then go to <code>Presets</code> -­&gt; <code>Man Made</code> -­&gt; <code>Man Made</code> -­&gt; <code>Building</code> menu option. Then, select one of the Building type.  <a href="#fig:building_setup">Figure 7</a> shows the setup of a shape as building.</p>
 </div>
-<div class="sect2">
-<h3 id="map-editor">4.1. Map editor</h3>
-<div class="paragraph">
-<p>Open a terminal window, navigate to the <code>rcrs-server</code> root directory and execute</p>
-</div>
-<div class="listingblock">
+<div id="fig:building_setup" class="imageblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="shell"><span class="nv">$ </span>./gradlew gmlEditor <span class="nt">--args</span><span class="o">=</span>&lt;map file path&gt;</code></pre>
+<img src="images/building_setup.png" alt="Building Setup">
 </div>
+<div class="title">Figure 7. Building Setup</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Separate Overlapping Buildings</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>where <code>--args=&lt;map file path&gt;</code> is optional. The default map file path is <code>maps/gml/test/map/map.gml</code>.</p>
+<p>The original map may contain shapes that overlap each other, either two buildings, or one building and a road, or two roads. The converter processes these overlapping during the conversion process, but sometimes it fails. The safest practice is to separate the overlapping shapes in your map before converting it. Select one of the shapes and drag and drop it to separate one from the other. <a href="#fig:overlapping_buildings">Figure 8</a> illustrates an example of overlapping buildings.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="scenario-editor">4.2. Scenario Editor</h3>
-<div class="paragraph">
-<p>Open a terminal window, navigate to the <code>rcrs-server</code> root directory and execute</p>
-</div>
-<div class="listingblock">
+<div id="fig:overlapping_buildings" class="imageblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="shell"><span class="nv">$ </span>./gradlew scenarioEditor <span class="nt">--args</span><span class="o">=</span>&lt;scenario path&gt;</code></pre>
+<img src="images/overlapping_buildings.png" alt="Overlapping Buildings">
 </div>
+<div class="title">Figure 8. Overlapping Buildings</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="roads">3.2.1.2. Roads</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>Setup roads as both ways</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>where <code>--args=&lt;scenario path&gt;</code> is optional. The default scenario path is <code>maps/gml/test/map</code>.</p>
+<p>Most roads on the original map are set as only one way road, although some of them should be both ways roads (see <a href="#fig:both_way_road">Figure 9</a>).</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="random-scenario">4.3. Random Scenario</h3>
-<div class="paragraph">
-<p>Open a terminal window, navigate to the <code>rcrs-server</code> root directory and execute</p>
-</div>
-<div class="listingblock">
+<div id="fig:both_way_road" class="imageblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="shell"><span class="nv">$ </span>./gradlew randomScenario <span class="nt">--args</span><span class="o">=</span>&lt;map path&gt;</code></pre>
+<img src="images/both_way_road.png" alt="Both Way Road">
 </div>
+<div class="title">Figure 9. Both Way Road</div>
 </div>
 <div class="paragraph">
-<p>where <code>--args=&lt;map path&gt;</code> is optional. The default map path is <code>maps/gml/test/map</code>.</p>
+<p>To set roads as both ways, select it then go to <code>Presets</code> -­&gt; <code>Highways</code> &#8594; <code>Streets</code> and select the street type. A dialog will appear, before clicking <code>OK</code>, make sure the checkbox <code>Oneway</code> is not selected. <a href="#fig:road_setup_dialog">Figure 10</a> illustrates the dialog for the option of "Unclassified" street.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="log-viewer">4.4. Log Viewer</h3>
-<div class="paragraph">
-<p>Open a terminal window, navigate to the <code>rcrs-server</code> root directory and execute</p>
-</div>
-<div class="listingblock">
+<div id="fig:road_setup_dialog" class="imageblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="shell"><span class="nv">$ </span>./gradlew logViewer <span class="nt">--args</span><span class="o">=</span><span class="s1">'-c config/logviewer.cfg &lt;log path&gt;'</span></code></pre>
+<img src="images/road_setup_dialog.png" alt="Road Setup Dialog">
 </div>
+<div class="title">Figure 10. Road Setup Dialog</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Remove roads from inside buildings</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>where <code>--args='-c config/logviewer.cfg &lt;log path&gt;'</code> is optional and <code>&lt;log path&gt;</code> defines the log file path. The default log file path is <code>logs/rescue.log</code>.</p>
+<p>The original OSM map may have some lines inside the buildings, which represent the path one can walk inside them. But sometimes these lines are interpreted by the converter as roads, and this can cause the conversion process to fail. To prevent this problem, it is necessary to remove these lines from inside the buildings. <a href="#fig:line_building">Figure 11</a> shows an example of lines inside a building.</p>
+</div>
+<div id="fig:line_building" class="imageblock">
+<div class="content">
+<img src="images/line_building.png" alt="Lines Inside the Building">
+</div>
+<div class="title">Figure 11. Lines Inside the Building</div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="osm2gml">4.5. <code>osm2gml</code></h3>
+</div>
+<div class="sect3">
+<h4 id="running_converter">3.2.2. Running the map converter</h4>
 <div class="paragraph">
-<p>Open a terminal window, navigate to the <code>rcrs-server</code> root directory and execute</p>
+<p>To convert the adjusted OSM map into the GML format, it is necessary to run the <code>osm2gml</code> converter. The run the converter, open a terminal window, navigate to the <code>rcrs-server</code> root directory and execute</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -814,553 +748,164 @@ Control-C
 <div class="paragraph">
 <p>The <code>&lt;osm map path&gt;</code> is the path to the OSM map file and the <code>&lt;gml map path&gt;</code> is the destination GML map path.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Even after running all the checks in <a href="#adjust_osm">Section 3.2.1</a>, there still may be some invalid entities in the map may cause the conversion to fail. Use the JOSM to fix those newly identified error in an iterative process.
+</td>
+</tr>
+</table>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="design">5. Simulator Design</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>This section describes the simulator architecture and its main features as well as the entities composing a simulation scenario.</p>
+<p><a href="#fig:converter_running">Figure 12</a> illustrates the converter application running, and <a href="#fig:converter_result">Figure 13</a> shows the resulting map after the conversion.</p>
+</div>
+<div id="fig:converter_running" class="imageblock">
+<div class="content">
+<img src="images/converter_running.png" alt="Converter `osm2gml` Running">
+</div>
+<div class="title">Figure 12. Converter <code>osm2gml</code> Running</div>
+</div>
+<div id="fig:converter_result" class="imageblock">
+<div class="content">
+<img src="images/converter_result.png" alt="Conversion Result">
+</div>
+<div class="title">Figure 13. Conversion Result</div>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="architecture">5.1. Architecture</h3>
+<h3 id="map_scenario">3.3. Create a Scenario</h3>
 <div class="paragraph">
-<p>The RoboCup Rescue Simulation server is composed of several simulators as listed in <a href="#table:simulators">Table 1</a>.</p>
+<p>Create a scenario means configuring the initial state of the entities in a map such as the initial location of agents, the locations of the centre agents, buildings on fire, etc.</p>
 </div>
-<table id="table:simulators" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. List of Simulators</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Simulator</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Clear</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Manage blockade removal</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Collapse</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Manage buildings' structural damage and blockade creation</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ignition</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Randomly ignites fire on buildings during the simulation</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fire</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Manage the fire spread between buildings and extinction</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Traffic</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Manage humans' movement</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Miscellaneous</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Manage human damage and buriedness</p></td>
-</tr>
-</tbody>
-</table>
 <div class="paragraph">
-<p>These simulators establish connections to the <em>kernel simulator</em>, responsible for coordinating the simulators' processes and centralizing the data they generate (<a href="#skinnerRamchurn2010">Skinner &amp; Ramchurn&#44; 2010</a>). These connections are illustrated in <a href="#fig:simulator_architecture">Figure 1</a>.</p>
+<p>To illustrate the creation of a scenario, the University of São Paulo created in <a href="#creation_process">Section 3</a> is used.</p>
 </div>
-<div id="fig:simulator_architecture" class="imageblock text-center">
+<div class="sect3">
+<h4 id="map_directory">3.3.1. Map directory</h4>
+<div class="paragraph">
+<p>The maps and scenarios of the current maps in the RoboCup Rescue Simulator ae stored in the directory <code>rcrs-server/maps/gml/</code>. Inside each folder in this directory there are a <code>map.gml</code> and a <code>scenario.xml</code> file. The former represents the map in GML format, while the latter represents one scenario for that specific map.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="gml_layout">3.3.2. GML map file layout</h4>
+<div class="paragraph">
+<p>In order to create a scenario, it is necessary to understand the layout of the GML file. The GML file is separated into 4 important parts: the node list,
+the edge list, the building list, and the road list.</p>
+</div>
+<div class="paragraph">
+<p>The edge list contains information of all the edges that are composed by the nodes in the node list. The buildings and roads are defined based on the edges. <a href="#fig:building_list">Figure 14</a> and <a href="#fig:road_list">Figure 15</a> show a example of the building and road lists on a GML map file.</p>
+</div>
+<div id="fig:building_list" class="imageblock">
 <div class="content">
-<img src="images/simulator_architecture.png" alt="RoboCup Rescue Agent Simulation platform architecture">
+<img src="images/building_list.png" alt="GML Building List">
 </div>
-<div class="title">Figure 1. RoboCup Rescue Agent Simulation platform architecture</div>
+<div class="title">Figure 14. GML Building List</div>
+</div>
+<div id="fig:road_list" class="imageblock">
+<div class="content">
+<img src="images/road_list.png" alt="GML Road List">
+</div>
+<div class="title">Figure 15. GML Road List</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="create_scenario">3.3.3. Creating a scenario</h4>
+<div class="paragraph">
+<p>The scenario file is also XML formatted file, and contains a list of the entities that compose the simulation initial state, including the starting fires, refuges, civilians, agents, etc. Each element of the xml file has two attributes. The first determines the type of entity being created (fire, refuge,
+ambulance, ambulance centre, etc.) and the second determines where the location of the entity in the map at the beginning of the simulation. The location is a number that refers to the <code>id</code> of an entity in the GML file (either a Building or a Road).</p>
 </div>
 <div class="paragraph">
-<p>The RoboCup Rescue simulator was designed to create a <em>partially observable</em>, <em>discrete-time</em>, <em>dynamic</em>, <em>stochastic</em>, <em>multiagent</em> environment. In other words, in this environment:</p>
+<p>There are two tools that can assist in creating a scenario: Scenario Editor and Random Scenario. Please refer the <a href="https://roborescue.github.io/rcrs-docs/rcrs-server/manual.html">RoboCup Rescue Simulator Manual</a> for information of how to run these tools.</p>
+</div>
+<div class="paragraph">
+<p><a href="#fig:scenario_layout">Figure 16</a> shows a reduced representation of scenario file created for University of São Paulo map.</p>
+</div>
+<div id="fig:scenario_layout" class="imageblock">
+<div class="content">
+<img src="images/scenario_layout.png" alt="Scenario Layout">
+</div>
+<div class="title">Figure 16. Scenario Layout</div>
+</div>
+<div class="paragraph">
+<p>Some types of entities can be located only on Buildings, others only on Roads, and other yet in both. The following list shows the types of entities and where they can be located at.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>the complete world current state cannot be known through a single agent&#8217;s perception (even if the agent has an infinite range of sight, it still will not be able to see through a building&#8217;s walls);</p>
-</li>
-<li>
-<p>time is divided in intervals, as opposed to continuous time;</p>
-</li>
-<li>
-<p>there are random elements that affect its state transition;</p>
-</li>
-<li>
-<p>there is more than one agent present, and one&#8217;s actions may interfere with the others' performance.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Time is divided in <em>timesteps</em>; during each timestep, the agent perceives the environment and reasons about what action it will perform. In each timestep, the following happens:
-. The kernel updates all agents' perception (visual and communication) and waits for the agents' commands.
-. The agents updates their world model and make their decisions, sending their commands to the kernel.
-. The kernel sends the agents' commands to the simulators.
-. The simulators process the agents' commands and send the changes suffered by the environment back to the kernel.
-. The kernel sends the environment changes to the viewers.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="entities">5.2. Entities</h3>
-<div class="paragraph">
-<p>Several objects are represented in the simulator as depicted in <a href="#fig:entities">Figure 2</a>.</p>
-</div>
-<div id="fig:entities" class="imageblock">
-<div class="content">
-<img src="images/entities.png" alt="Entities of the simulator">
-</div>
-<div class="title">Figure 2. Entities of the simulator</div>
-</div>
-<div class="sect3">
-<h4 id="blockades">5.2.1. Blockades</h4>
-<div class="paragraph">
-<p>Blockades obstruct the path of agents and civilians; they are represented as black polygons in roads. Blockades appear in the beginning of the simulation and are not produced after this. They must be removed by Police Forces.</p>
-</div>
-<div class="paragraph">
-<p>The properties constituting a blockade are:</p>
-</div>
-<div class="hdlist">
-<table>
-<tr>
-<td class="hdlist1">
-position
-</td>
-<td class="hdlist2">
-<p>ID of the road to which the blockade belongs</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-repair cost
-</td>
-<td class="hdlist2">
-<p>cost to completely remove the blockade from the road</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-shape
-</td>
-<td class="hdlist2">
-<p>a rectangle which surrounds the whole blockade</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-X &amp; Y
-</td>
-<td class="hdlist2">
-<p>coordinates of the blockade&#8217;s centroid</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-apexes
-</td>
-<td class="hdlist2">
-<p>vector containing the apexes of the blockade</p>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="area">5.2.2. Area</h4>
-<div class="paragraph">
-<p>Area entities represent buildings and roads.</p>
-</div>
-<div class="paragraph">
-<p>The properties constituting an area are:</p>
-</div>
-<div class="hdlist">
-<table>
-<tr>
-<td class="hdlist1">
-blockades
-</td>
-<td class="hdlist2">
-<p>a list with the blockades in that area</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-edges
-</td>
-<td class="hdlist2">
-<p>a list with the edges that limit the area</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-neighbours
-</td>
-<td class="hdlist2">
-<p>a list of the areas that can be accessed from this area</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-X &amp; Y
-</td>
-<td class="hdlist2">
-<p>coordinates representing the area in the map</p>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>While both <strong>Buildings</strong> and <strong>Roads</strong> have the blockades attribute, blockades are valid only in <strong>Roads</strong>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="buildings">5.2.3. Buildings</h4>
-<div class="paragraph">
-<p>Buildings represent all kinds of buildings in the simulator. There are special kinds of buildings like <strong>Refuges</strong>, <strong>Ambulance Centres</strong>, <strong>Fire Stations</strong>, and <strong>Police Offices</strong> that cannot catch on fire. <a href="#table:special_buildings">Table 2</a> shows the illustration of these special buildings, they will be described in later sections of this document.</p>
-</div>
-<table id="table:special_buildings" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Special buildings</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="image"><img src="images/refuge.png" alt="Refuge"></span><br>
-<strong>Refuge</strong></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="image"><img src="images/ambulance_centre.png" alt="Ambulance Centre"></span><br>
-<strong>Ambulance Centre</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="image"><img src="images/fire_station.png" alt="Fire Station"></span><br>
-<strong>Fire Station</strong></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="image"><img src="images/police_office.png" alt="Police Office"></span><br>
-<strong>Police Office</strong></p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>The properties constituting a building are:</p>
-</div>
-<div class="hdlist">
-<table>
-<tr>
-<td class="hdlist1">
-brokenness
-</td>
-<td class="hdlist2">
-<p>how structurally damaged the building is; does not change during the simulation</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-fieryness
-</td>
-<td class="hdlist2">
-<p>the intensity of the fire and fire-related damage in the building</p>
+<p>Building</p>
 <div class="ulist">
 <ul>
 <li>
-<p><em>UNBURNT</em> - not burnt at all</p>
+<p>fire</p>
 </li>
 <li>
-<p><em>WATER_DAMAGE</em> - not burnt at all, but has water damage</p>
+<p>refuge</p>
 </li>
 <li>
-<p><em>HEATING</em> - on fire a bit</p>
+<p>firestation</p>
 </li>
 <li>
-<p><em>BURNING</em> - on fire a bit more</p>
+<p>ambulancecentre</p>
 </li>
 <li>
-<p><em>INFERNO</em> - on fire a lot</p>
+<p>policeoffice</p>
 </li>
 <li>
-<p><em>MINOR_DAMAGE</em> - extinguished but minor damage</p>
+<p>gasstation</p>
 </li>
 <li>
-<p><em>MODERATE_DAMAGE</em> - extinguished but moderate damage</p>
+<p>ambulanceteam</p>
 </li>
 <li>
-<p><em>SEVERE_DAMAGE</em> - extinguished but major damage</p>
+<p>policeforce</p>
 </li>
 <li>
-<p><em>BURNT_OUT</em> - completely burnt out</p>
+<p>firebrigade</p>
+</li>
+<li>
+<p>civilian</p>
 </li>
 </ul>
 </div>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-floors
-</td>
-<td class="hdlist2">
-<p>the number of floors the building has</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-ground area
-</td>
-<td class="hdlist2">
-<p>the area of each floor</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-ignition
-</td>
-<td class="hdlist2">
-<p>indicates if the simulator has lit this building on fire (<strong>NOTE:</strong> A building can catch on fire by being ignited by the simulator or by being close to a burning building; ignition will be set to "1" if the building was, at some point of the simulation, ignited by the simulator.)</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-importance
-</td>
-<td class="hdlist2">
-<p>unknown function; has equal values to all buildings</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-temperature
-</td>
-<td class="hdlist2">
-<p>temperature of the building; if it crosses a certain threshold, the building catches on fire</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-total area
-</td>
-<td class="hdlist2">
-<p>the total area of the building (<strong>floors</strong> x <strong>ground area</strong>)</p>
-</td>
-</tr>
-</table>
+</li>
+<li>
+<p>Road</p>
+<div class="ulist">
+<ul>
+<li>
+<p>hydrant</p>
+</li>
+<li>
+<p>ambulanceteam</p>
+</li>
+<li>
+<p>policeforce</p>
+</li>
+<li>
+<p>firebrigade</p>
+</li>
+<li>
+<p>civilian</p>
+</li>
+</ul>
 </div>
-<div class="paragraph">
-<p>Regular buildings are represented as polygons of various colors, depending of their status, as shown in <a href="#fig:building_status">Figure 3</a>; the darker the color, the greater the structural fire or water damage.</p>
-</div>
-<div id="fig:building_status" class="imageblock">
-<div class="content">
-<img src="images/building_status.png" alt="Building status" width="600">
-</div>
-<div class="title">Figure 3. Possible status of regular buildings</div>
-</div>
-<div class="paragraph">
-<p>In the beginning of the simulation, broken buildings trap humans inside it under debris; these debris must be removed by <strong>Ambulance Teams</strong>, who then proceeds to rescue the human.</p>
-</div>
-<div class="paragraph">
-<p>A <strong>Refuge</strong> is a special kind of building: it represents a place destined to support the rescue activity, providing medical care for the wounded and water to the <strong>Fire Brigades</strong>. In the simulator, humans inside a refuge have their damage zeroed, which means they do not lose health while they stay there; damage will, however, resume when the human entity leaves the refuge.</p>
-</div>
-<div class="paragraph">
-<p>Also, <strong>Fire Brigades</strong> have their water supply replenished by a certain amount during each cycle while they are inside the refuge.</p>
+</li>
+</ul>
 </div>
 </div>
-<div class="sect3">
-<h4 id="roads">5.2.4. Roads</h4>
-<div class="paragraph">
-<p>Area entities representing roads have no new attributes besides those of <strong>Area</strong> entities.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="humans">5.2.5. Humans</h4>
-<div class="paragraph">
-<p>These are the entities representing humans. In the simulator, they can be <strong>Civilians</strong>, <strong>Ambulance Teams</strong>, <strong>Fire Brigades</strong>, or <strong>Police Forces</strong>. They are all represented by circles of different colors, and cannot move by themselves if they are dead or buried.</p>
-</div>
-<div class="paragraph">
-<p>The properties constituting a human are:</p>
-</div>
-<div class="hdlist">
-<table>
-<tr>
-<td class="hdlist1">
-buriedness
-</td>
-<td class="hdlist2">
-<p>how deep the human is buried</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-damage
-</td>
-<td class="hdlist2">
-<p>how much HP the human loses per cycle; zeroes when a refuge is reached</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-direction
-</td>
-<td class="hdlist2">
-<p>direction to where the human is moving (inferred); the Y-axis positive half is zero, and the value increases until 129599 ((360 * 60 * 60) - 1) seconds anti-clockwise</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-HP
-</td>
-<td class="hdlist2">
-<p>health points of the human; if it reaches 0, the human dies</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-position
-</td>
-<td class="hdlist2">
-<p>ID of the entity where the human is; may be an Area entity or a human entity (if it is inside an ambulance)</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-position history
-</td>
-<td class="hdlist2">
-<p>a list of the entities the human has passed during the last cycle, in chronological order</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-stamina
-</td>
-<td class="hdlist2">
-<p>not implemented; would decrease each time the agent took an action and would be partially replenished at the beginning of each cycle</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-travel distance
-</td>
-<td class="hdlist2">
-<p>(unknown)</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-X &amp; Y
-</td>
-<td class="hdlist2">
-<p>coordinates representing the human in the map</p>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>The color of each human in the simulator is defined by its type and its health: the lower its health, the darker it is. Dead humans are represented by the black color.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="civilians">5.2.6. Civilians</h4>
-<div class="paragraph">
-<p>Civilians are human entities and they are not part of a rescue team; they are represented by the color green. Their standard behavior is to walk to the closest refuge on their on if they are not wounded or buried; otherwise, they will have to be transported by an <strong>Ambulance Team</strong>.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="agents">5.3. Agents</h3>
-<div class="paragraph">
-<p>These are the entities that will compose your rescue team; in other words, this is what you will program. Agents are divided in two types: <strong>Platoon Agents</strong> (<a href="#platoon_agents">Section 5.3.1</a>) and <strong>Centre Agents</strong> (<a href="#centre_agents">Section 5.3.2</a>).</p>
-</div>
-<div class="sect3">
-<h4 id="platoon_agents">5.3.1. Platoon agents</h4>
-<div class="paragraph">
-<p>Platoon agents are able to interact with the simulated environment through perception and executing actions on it. They can also exchange messages with other agents by vocal or radio communication. They are comprised of three different categories: the <strong>Ambulance Team</strong>, <strong>Fire Brigade</strong>, and <strong>Police Force</strong>.</p>
-</div>
-<div class="hdlist">
-<table>
-<tr>
-<td class="hdlist1">
-Ambulance Team
-</td>
-<td class="hdlist2">
-<p>is responsible for rescuing humans (agents and civilians) and take them to a refuge. They are able to unbury victims and carry one person.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-Fire Brigade
-</td>
-<td class="hdlist2">
-<p>is responsible for extinguish fires on buildings. Moreover, they carry a certain amount of water in their tanks and they can replenish it in a refuge.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-Police Force
-</td>
-<td class="hdlist2">
-<p>is responsible for removing blockades from the roads. When ordered to do so, they will clean a certain amount, specified in the repair cost parameter, from the target blockade at each cycle. However, differently from <strong>Ambulance Teams</strong> and <strong>Fire Brigades</strong>, having two <strong>Police Forces</strong> acting on the same blockade brings no advantage to the process: it will be as though there was only one <strong>Police Force</strong> acting on it.</p>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="centre_agents">5.3.2. Centre Agents</h4>
-<div class="paragraph">
-<p>Centre agents are a type of agents whose only interaction with the world is through radio communication. There are three types of central agents: <strong>Ambulance Centres</strong>, <strong>Fire Stations</strong> and <strong>Police Offices</strong>, and they are represented as buildings.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="perception_commands">5.4. Perception and Commands</h3>
-<div class="paragraph">
-<p>The simulator has two perception modes: <em>standard</em> and <em>line of sight</em>.</p>
-</div>
-<div class="paragraph">
-<p>The <em>line of sight</em> perception simulates visual perception of the agent: a vision range and a number of rays are defined and the agent percepts anything that is reached by these rays.</p>
-</div>
-<div id="fig:no_los" class="imageblock">
-<div class="content">
-<img src="images/no_los.png" alt="No Light of Sight" width="450">
-</div>
-<div class="title">Figure 4. No Light of Sight</div>
-</div>
-<div id="fig:los" class="imageblock">
-<div class="content">
-<img src="images/with_los.png" alt="Include Light of Sight" width="450">
-</div>
-<div class="title">Figure 5. Include Light of Sight</div>
-</div>
-<div class="paragraph">
-<p>The set of currently visible entities for an agent is stored in a structure named <em>ChangeSet</em>; entities present in it are automatically updated in its world model; that is, if an agent perceives a blockade it did not know that was there before, this blockade is automatically added to its world model. The opposite, though does not happen: if the agent does not perceive a blockade any more, nothing in its world model changes, even if it knew that there was a blockade there before. In that case, the agent will still think that there is a blockade in that road, even though such blockade has already been cleared. Thus, it is up to the agent to figure this out and modify its world model accordingly.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="communication">5.5. Communication</h3>
-<div class="paragraph">
-<p>There are two forms of communication available in the simulator: <em>direct communication</em> and <em>radio communication</em>. Direct communication, done with the command <em>speak</em>, is communication audible to humans within a radius from the emitter agent, as if the emitter shouted something.</p>
-</div>
-<div class="paragraph">
-<p>Radio communication is done with the command <em>tell</em>, and transmits information to all agents that are signed up to the channel on which it was broadcasted. Radio communication channels are present in limited number, each one with a limited bandwidth.</p>
-</div>
-<div class="paragraph">
-<p>In both types of communication, the message has to be coded into a string of bytes before being sent; the receptor must decode it once it receives the message. Both types might be susceptible to message <em>drop out</em>, where the message is not received by its targets; radio communication is also susceptible to message <em>failure</em>, where the message is received empty.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="references">References</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><a id="skinnerRamchurn2010"></a>Skinner, C., &amp; Ramchurn, S. (2010). The RoboCup rescue simulation platform. <em>Proceedings of the 9th International Conference on Autonomous Agents and Multiagent Systems: Volume 1 - Volume 1</em>, 1647–1648.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.3<br>
-Last updated 2020-09-08 21:05:02 +0100
+Version 2.0<br>
+Last updated 2020-09-09 17:42:15 +0100
 </div>
 </div>
 <style>
