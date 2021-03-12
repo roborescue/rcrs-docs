@@ -10,3 +10,6 @@ __latex*
 
 # Visulal Studio Code
 .vscode
+
+# Theia
+.theia
