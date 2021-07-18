@@ -1,7 +1,7 @@
 = RoboCup Rescue Simulator Manual
 :author: RoboCup Rescue Simulation Team
-:revnumber: 1.3
-:revdate: September 5, 2020
+:revnumber: 1.4
+:revdate: July 18, 2021
 :sectids!:
 :sectnums:
 :sectnumlevels: 3
@@ -33,7 +33,7 @@ This manual assumes the simulator will run in a Linux machine even though it is 
 [#requirements]
 === Software Requirements
 
-* https://openjdk.java.net/[Java OpenJDK 8+]
+* https://openjdk.java.net/[Java OpenJDK 11+]
 * https://git-scm.com/[Git]
 * https://gradle.org/[Gradle]
 * Utilities like `wget`, `bash`, `xterm`, `tar`, `gzip`, etc. +
@@ -53,7 +53,7 @@ git clone https://github.com/roborescue/rcrs-server.git
 The `rcrs-server` contains multiple directories. The important directories of the server are:
 
 * `boot`: scripts to run the simulation server
-** `boot/config/`: configuration files
+** `boot/config/`: default configuration files
 ** `boot/logs/`: text log files
 ** `boot/records/`: JSON log files
 * `build/`: compiled Java classes
@@ -169,7 +169,15 @@ Open a terminal window, navigate to the `rcrs-server` root directory and execute
 $ ./gradlew gmlEditor --args=<map file path>
 ----
 
-where `--args=<map file path>` is optional. The default map file path is `maps/gml/test/map/map.gml`.
+where `--args=<map file path>` is optional.
+
+For example,
+[source,shell]
+----
+$ ./gradlew gmlEditor
+
+$ ./gradlew gmlEditor --args="../maps/gml/test/map"
+----
 
 [#scenario-editor]
 === Scenario Editor
@@ -180,7 +188,15 @@ Open a terminal window, navigate to the `rcrs-server` root directory and execute
 $ ./gradlew scenarioEditor --args=<scenario path>
 ----
 
-where `--args=<scenario path>` is optional. The default scenario path is `maps/gml/test/map`.
+where `--args=<scenario path>` is optional.
+
+For example,
+[source,shell]
+----
+$ ./gradlew scenarioEditor
+
+$ ./gradlew scenarioEditor --args="../maps/gml/test/map"
+----
 
 [#random-scenario]
 === Random Scenario
@@ -191,7 +207,15 @@ Open a terminal window, navigate to the `rcrs-server` root directory and execute
 $ ./gradlew randomScenario --args=<map path>
 ----
 
-where `--args=<map path>` is optional. The default map path is `maps/gml/test/map`.
+where `--args=<map path>` is optional.
+
+For example,
+[source,shell]
+----
+$ ./gradlew randomScenario
+
+$ ./gradlew randomScenario --args="../maps/gml/test/map -civ 10 100 -fb 1 50 -fs 0 1 -pf 1 50 -po 0 1 -at 1 50 -ac 0 1 -refuge 1 2 -fire 0 1"
+----
 
 [#log-viewer]
 === Log Viewer
@@ -378,8 +402,8 @@ These are the entities that will compose your rescue team; in other words, this 
 Platoon agents are able to interact with the simulated environment through perception and executing actions on it. They can also exchange messages with other agents by vocal or radio communication. They are comprised of three different categories: the *Ambulance Team*, *Fire Brigade*, and *Police Force*.
 
 [horizontal]
-Ambulance Team:: is responsible for rescuing humans (agents and civilians) and take them to a refuge. They are able to unbury victims and carry one person.
-Fire Brigade:: is responsible for extinguish fires on buildings. Moreover, they carry a certain amount of water in their tanks and they can replenish it in a refuge.
+Ambulance Team:: is responsible for transporting rescued victims to a refuge.
+Fire Brigade:: is responsible for unburying (i.e., rescuing) victims and extinguishing fires on buildings. They carry a certain amount of water in their tanks and they can replenish it in a refuge.
 Police Force:: is responsible for removing blockades from the roads. When ordered to do so, they will clean a certain amount, specified in the repair cost parameter, from the target blockade at each cycle. However, differently from *Ambulance Teams* and *Fire Brigades*, having two *Police Forces* acting on the same blockade brings no advantage to the process: it will be as though there was only one *Police Force* acting on it.
 
 [#centre_agents]
